@@ -1,4 +1,13 @@
 <?php
+// Iniciar sesión
+session_start();
+
+// Verificar autenticación
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    header("Location: login.php");
+    exit();
+}
+
 // Incluir la conexión a la base de datos
 include_once 'config/database.php';
 $database = new Database();
@@ -60,6 +69,12 @@ switch ($action) {
     case 'porConductor':
         // Acción para ver mototaxis por conductor
         $mototaxiController->porConductor();
+        break;
+    case 'logout':
+        // Cerrar sesión
+        session_destroy();
+        header("Location: login.php");
+        exit();
         break;
     default:
         include_once 'views/dashboard.php';

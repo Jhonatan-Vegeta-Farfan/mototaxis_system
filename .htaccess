@@ -1,0 +1,8 @@
+RewriteEngine On
+
+# Redirigir a login si no está autenticado
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^/login\.php$
+RewriteCond %{HTTP_COOKIE} !loggedin=true [NC]
+RewriteRule ^(.*)$ login.php [L]

@@ -1,3 +1,12 @@
+<?php
+// Iniciar sesión si no está iniciada
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Obtener la acción actual
+$action = isset($_GET['action']) ? $_GET['action'] : 'dashboard';
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -76,6 +85,21 @@
                             </a></li>
                             <li><a class="dropdown-item" href="index.php?action=crear_empresa">
                                 <i class="fas fa-building me-2"></i> Nueva Empresa
+                            </a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" 
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user me-1"></i> <?php echo $_SESSION['username'] ?? 'Usuario'; ?>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="#">
+                                <i class="fas fa-user-circle me-2"></i> Mi Perfil
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="index.php?action=logout">
+                                <i class="fas fa-sign-out-alt me-2"></i> Cerrar Sesión
                             </a></li>
                         </ul>
                     </li>
