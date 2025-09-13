@@ -601,10 +601,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </button>
                 </form>
                 
-                <div class="credential-hint">
-                    <i class="fas fa-info-circle me-2"></i>
-                    Usuario: <strong>vegeta</strong> | Contraseña: <strong>123456789</strong>
-                </div>
+                
             </div>
         </div>
     </div>
