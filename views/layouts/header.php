@@ -28,13 +28,21 @@ $action = isset($_GET['action']) ? $_GET['action'] : 'dashboard';
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        /* Solo agregamos este pequeño ajuste para el logo */
+        .navbar-brand img {
+            height: 80px;
+            width: auto;
+            object-fit: contain;
+        }
+    </style>
 </head>
 <body>
     <!-- Barra de navegación superior -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-gradient bg-primary shadow">
         <div class="container-fluid">
             <a class="navbar-brand" href="index.php?action=dashboard">
-                <img src="https://www.facebook.com/photo/?fbid=279888998442308&set=a.110194105411799" alt="Logo" height="40" class="d-inline-block align-text-top me-2">
+                <img src="assets/img/logomuni.jpg" alt="Logo" class="d-inline-block align-text-top me-2">
                 <span class="d-none d-md-inline">Municipalidad Provincial de Huanta</span>
                 <span class="d-md-none">MP Huanta</span>
             </a>
@@ -65,7 +73,7 @@ $action = isset($_GET['action']) ? $_GET['action'] : 'dashboard';
                     <li class="nav-item">
                         <a class="nav-link <?php echo ($action == 'mototaxis' || $action == 'crear_mototaxi' || $action == 'editar_mototaxi' || $action == 'porConductor') ? 'active' : ''; ?>" 
                            href="index.php?action=mototaxis">
-                            <i class="fas fa-motorcycle me-1"></i> Mototaxis
+                            <i class="fas fa-motorcycle me-1"></i> Mototaxes
                         </a>
                     </li>
                     <li class="nav-item">
