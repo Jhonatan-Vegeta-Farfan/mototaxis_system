@@ -92,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 
                 <div class="mb-3">
                     <label for="password" class="form-label">Contraseña</label>
-                    <input type="password" class="form-control" id="password" name="password" required 
+                    <input type="password" class="form-control" id="password" name="password" required
                            placeholder="Ingrese su contraseña">
                 </div>
                 
