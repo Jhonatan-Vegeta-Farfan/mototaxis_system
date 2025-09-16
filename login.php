@@ -601,15 +601,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </button>
                 </form>
                 
-<<<<<<< HEAD
-                <div class="mb-3">
-                    <label for="password" class="form-label">Contraseña</label>
-                    <input type="password" class="form-control" id="password" name="password" required
-                           placeholder="Ingrese su contraseña">
-                </div>
-=======
->>>>>>> 04ab8709ef88c7d0f2a5b62896a71a3a1923529e
-                
             </div>
         </div>
     </div>

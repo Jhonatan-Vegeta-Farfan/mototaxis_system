@@ -73,7 +73,7 @@ $action = isset($_GET['action']) ? $_GET['action'] : 'dashboard';
                     <li class="nav-item">
                         <a class="nav-link <?php echo ($action == 'mototaxis' || $action == 'crear_mototaxi' || $action == 'editar_mototaxi' || $action == 'porConductor') ? 'active' : ''; ?>" 
                            href="index.php?action=mototaxis">
-                            <i class="fas fa-motorcycle me-1"></i> Mototaxes
+                            <i class="fas fa-motorcycle me-1"></i> Mototaxis
                         </a>
                     </li>
                     <li class="nav-item">
