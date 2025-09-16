@@ -4,7 +4,7 @@
     --success-color: #198754;
     --danger-color: #dc3545;
     --warning-color: #ffc107;
-    --info-color: #1a45c6;
+    --info-color: #0dcaf0;
     --light-color: #f8f9fa;
     --dark-color: #212529;
     --sidebar-width: 280px;
@@ -154,7 +154,7 @@ body {
 }
 
 .btn-info:hover {
-    background: linear-gradient(135deg, #3a9cfc 0%, #174ea8 100%);
+    background: linear-gradient(135deg, #3a9cfc 0%, #00d9fe 100%);
     transform: translateY(-3px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
