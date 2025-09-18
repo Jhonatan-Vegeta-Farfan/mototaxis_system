@@ -16,12 +16,12 @@ $db = $database->getConnection();
 // Incluir modelos
 include_once 'models/Empresa.php';
 include_once 'models/Mototaxi.php';
-include_once 'models/User.php'; // Asegurar que el modelo User está incluido
+include_once 'models/User.php';
 
 // Incluir controladores
 include_once 'controllers/EmpresaController.php';
 include_once 'controllers/MototaxiController.php';
-include_once 'controllers/UserController.php'; // Asegurar que el controlador User está incluido
+include_once 'controllers/UserController.php';
 
 // Determinar la acción a realizar
 $action = isset($_GET['action']) ? $_GET['action'] : 'dashboard';
@@ -29,7 +29,7 @@ $action = isset($_GET['action']) ? $_GET['action'] : 'dashboard';
 // Crear instancias de controladores
 $empresaController = new EmpresaController($db);
 $mototaxiController = new MototaxiController($db);
-$userController = new UserController($db); // Instancia para el controlador de usuarios
+$userController = new UserController($db);
 
 // Enrutamiento
 switch ($action) {

@@ -18,12 +18,22 @@
                     <a href="index.php?action=empresas" class="list-group-item list-group-item-action">
                         <i class="fas fa-building me-2"></i> Gestión de Empresas
                     </a>
+                    <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin'): ?>
+                    <a href="index.php?action=usuarios" class="list-group-item list-group-item-action">
+                        <i class="fas fa-users me-2"></i> Gestión de Usuarios
+                    </a>
+                    <?php endif; ?>
                     <a href="index.php?action=crear_mototaxi" class="list-group-item list-group-item-action">
                         <i class="fas fa-plus-circle me-2"></i> Nuevo Mototaxi
                     </a>
                     <a href="index.php?action=crear_empresa" class="list-group-item list-group-item-action">
                         <i class="fas fa-plus-square me-2"></i> Nueva Empresa
                     </a>
+                    <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin'): ?>
+                    <a href="index.php?action=crear_usuario" class="list-group-item list-group-item-action">
+                        <i class="fas fa-user-plus me-2"></i> Nuevo Usuario
+                    </a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -57,10 +67,12 @@
                 <?php
                 $mototaxi = new Mototaxi($db);
                 $empresa = new Empresa($db);
+                $user = new User($db);
                 
                 // Usar los nuevos métodos para obtener los totales
                 $totalMototaxis = $mototaxi->countAll();
                 $totalEmpresas = $empresa->countAll();
+                $totalUsuarios = $user->countAll();
                 $registrosHoyMototaxis = $mototaxi->countRegistrosHoy();
                 $registrosHoyEmpresas = $empresa->countRegistrosHoy();
                 $totalRegistrosHoy = $registrosHoyMototaxis + $registrosHoyEmpresas;
@@ -75,12 +87,16 @@
                     <span class="badge bg-success"><?php echo $totalEmpresas; ?></span>
                 </div>
                 <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span>Usuarios registrados:</span>
+                    <span class="badge bg-info"><?php echo $totalUsuarios; ?></span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
                     <span>Registros hoy:</span>
-                    <span class="badge bg-info"><?php echo $totalRegistrosHoy; ?></span>
+                    <span class="badge bg-warning"><?php echo $totalRegistrosHoy; ?></span>
                 </div>
                 <div class="d-flex justify-content-between align-items-center">
                     <span>Mototaxis activos:</span>
-                    <span class="badge bg-warning"><?php echo $mototaxisActivos; ?></span>
+                    <span class="badge bg-danger"><?php echo $mototaxisActivos; ?></span>
                 </div>
             </div>
         </div>
@@ -98,6 +114,11 @@
                 <a href="index.php?action=crear_empresa" class="btn btn-success">
                     <i class="fas fa-plus me-1"></i> Nueva Empresa
                 </a>
+                <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin'): ?>
+                <a href="index.php?action=crear_usuario" class="btn btn-info">
+                    <i class="fas fa-plus me-1"></i> Nuevo Usuario
+                </a>
+                <?php endif; ?>
             </div>
         </div>
 
@@ -173,11 +194,11 @@
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                    Registros Hoy</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $totalRegistrosHoy; ?></div>
+                                    Total Usuarios</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $totalUsuarios; ?></div>
                             </div>
                             <div class="col-auto">
-                                <i class="fas fa-calendar-day fa-2x text-gray-300"></i>
+                                <i class="fas fa-users fa-2x text-gray-300"></i>
                             </div>
                         </div>
                     </div>
@@ -190,11 +211,11 @@
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                    Activos</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $mototaxisActivos; ?></div>
+                                    Registros Hoy</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $totalRegistrosHoy; ?></div>
                             </div>
                             <div class="col-auto">
-                                <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                                <i class="fas fa-calendar-day fa-2x text-gray-300"></i>
                             </div>
                         </div>
                     </div>

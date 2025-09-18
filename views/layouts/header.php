@@ -82,6 +82,16 @@ $action = isset($_GET['action']) ? $_GET['action'] : 'dashboard';
                             <i class="fas fa-building me-1"></i> Empresas
                         </a>
                     </li>
+                    
+                    <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin'): ?>
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo ($action == 'usuarios' || $action == 'crear_usuario' || $action == 'editar_usuario') ? 'active' : ''; ?>" 
+                           href="index.php?action=usuarios">
+                            <i class="fas fa-users me-1"></i> Usuarios
+                        </a>
+                    </li>
+                    <?php endif; ?>
+                    
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" 
                            data-bs-toggle="dropdown" aria-expanded="false">
@@ -94,12 +104,17 @@ $action = isset($_GET['action']) ? $_GET['action'] : 'dashboard';
                             <li><a class="dropdown-item" href="index.php?action=crear_empresa">
                                 <i class="fas fa-building me-2"></i> Nueva Empresa
                             </a></li>
+                            <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin'): ?>
+                            <li><a class="dropdown-item" href="index.php?action=crear_usuario">
+                                <i class="fas fa-user-plus me-2"></i> Nuevo Usuario
+                            </a></li>
+                            <?php endif; ?>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" 
                            data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-user me-1"></i> <?php echo $_SESSION['username'] ?? 'Usuario'; ?>
+                            <i class="fas fa-user me-1"></i> <?php echo $_SESSION['user_name'] ?? 'Usuario'; ?>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="userDropdown">
                             <li><a class="dropdown-item" href="#">

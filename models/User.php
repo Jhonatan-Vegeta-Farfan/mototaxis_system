@@ -18,14 +18,18 @@ class User {
     }
 
     public function read() {
-        $query = "CALL sp_obtener_usuarios()";
+        $query = "SELECT id_usuario, username, nombre_completo, email, rol, activo, fecha_creacion, fecha_actualizacion
+                  FROM " . $this->table_name . " ORDER BY nombre_completo ASC";
+        
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt;
     }
 
     public function create() {
-        $query = "CALL sp_crear_usuario(:username, :password, :nombre_completo, :email, :rol, :activo)";
+        $query = "INSERT INTO " . $this->table_name . " 
+                  SET username=:username, password=:password, nombre_completo=:nombre_completo, 
+                  email=:email, rol=:rol, activo=:activo";
         
         $stmt = $this->conn->prepare($query);
         
@@ -50,9 +54,9 @@ class User {
     }
 
     public function readOne() {
-        $query = "CALL sp_obtener_usuario_por_id(:id_usuario)";
+        $query = "SELECT * FROM " . $this->table_name . " WHERE id_usuario = ? LIMIT 0,1";
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(":id_usuario", $this->id_usuario);
+        $stmt->bindParam(1, $this->id_usuario);
         $stmt->execute();
         
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -72,7 +76,10 @@ class User {
     }
 
     public function update() {
-        $query = "CALL sp_actualizar_usuario(:id_usuario, :username, :nombre_completo, :email, :rol, :activo)";
+        $query = "UPDATE " . $this->table_name . " 
+                  SET username=:username, nombre_completo=:nombre_completo, 
+                  email=:email, rol=:rol, activo=:activo 
+                  WHERE id_usuario=:id_usuario";
         
         $stmt = $this->conn->prepare($query);
         
@@ -83,17 +90,19 @@ class User {
         $this->activo = htmlspecialchars(strip_tags($this->activo));
         $this->id_usuario = htmlspecialchars(strip_tags($this->id_usuario));
         
-        $stmt->bindParam(":id_usuario", $this->id_usuario);
         $stmt->bindParam(":username", $this->username);
         $stmt->bindParam(":nombre_completo", $this->nombre_completo);
         $stmt->bindParam(":email", $this->email);
         $stmt->bindParam(":rol", $this->rol);
         $stmt->bindParam(":activo", $this->activo);
+        $stmt->bindParam(":id_usuario", $this->id_usuario);
         
         if($stmt->execute()) {
             // Si se proporcionó una nueva contraseña, actualizarla
             if(!empty($this->password)) {
-                $query_password = "CALL sp_actualizar_password_usuario(:id_usuario, :password)";
+                $query_password = "UPDATE " . $this->table_name . " 
+                                  SET password=:password 
+                                  WHERE id_usuario=:id_usuario";
                 $stmt_password = $this->conn->prepare($query_password);
                 $this->password = password_hash($this->password, PASSWORD_DEFAULT);
                 $stmt_password->bindParam(":id_usuario", $this->id_usuario);
@@ -106,11 +115,11 @@ class User {
     }
 
     public function delete() {
-        $query = "CALL sp_eliminar_usuario(:id_usuario)";
+        $query = "DELETE FROM " . $this->table_name . " WHERE id_usuario = ?";
         $stmt = $this->conn->prepare($query);
         
         $this->id_usuario = htmlspecialchars(strip_tags($this->id_usuario));
-        $stmt->bindParam(":id_usuario", $this->id_usuario);
+        $stmt->bindParam(1, $this->id_usuario);
         
         if($stmt->execute()) {
             return true;
@@ -119,25 +128,45 @@ class User {
     }
 
     public function usernameExists($username, $exclude_id = null) {
-        $query = "CALL sp_verificar_username(:username, :exclude_id)";
+        $query = "SELECT COUNT(*) as total FROM " . $this->table_name . " 
+                  WHERE username = :username";
+        
+        if ($exclude_id) {
+            $query .= " AND id_usuario != :exclude_id";
+        }
+        
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":username", $username);
-        $stmt->bindParam(":exclude_id", $exclude_id);
-        $stmt->execute();
         
+        if ($exclude_id) {
+            $stmt->bindParam(":exclude_id", $exclude_id);
+        }
+        
+        $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $row['existe'] > 0;
+        
+        return $row['total'] > 0;
     }
 
     public function emailExists($email, $exclude_id = null) {
-        $query = "CALL sp_verificar_email(:email, :exclude_id)";
+        $query = "SELECT COUNT(*) as total FROM " . $this->table_name . " 
+                  WHERE email = :email";
+        
+        if ($exclude_id) {
+            $query .= " AND id_usuario != :exclude_id";
+        }
+        
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":email", $email);
-        $stmt->bindParam(":exclude_id", $exclude_id);
-        $stmt->execute();
         
+        if ($exclude_id) {
+            $stmt->bindParam(":exclude_id", $exclude_id);
+        }
+        
+        $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $row['existe'] > 0;
+        
+        return $row['total'] > 0;
     }
 
     public function countAll() {
@@ -151,7 +180,9 @@ class User {
     }
 
     public function authenticate($username, $password) {
-        $query = "CALL sp_autenticar_usuario(:username)";
+        $query = "SELECT * FROM " . $this->table_name . " 
+                  WHERE username = :username AND activo = 1";
+        
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":username", $username);
         $stmt->execute();

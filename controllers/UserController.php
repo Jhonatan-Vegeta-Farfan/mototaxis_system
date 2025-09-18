@@ -14,12 +14,26 @@ class UserController {
     }
 
     public function index() {
+        // Verificar permisos de administrador
+        if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
+            $_SESSION['error_message'] = "No tiene permisos para acceder a esta sección.";
+            header("Location: index.php?action=dashboard");
+            exit();
+        }
+        
         $stmt = $this->model->read();
         include_once 'views/usuarios/index.php';
     }
 
     public function crear() {
-        // Mostrar mensajes de error si existen
+        // Verificar permisos de administrador
+        if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
+            $_SESSION['error_message'] = "No tiene permisos para acceder a esta sección.";
+            header("Location: index.php?action=dashboard");
+            exit();
+        }
+        
+        // Mostrar mensaje de error si existe
         if (isset($_SESSION['error_message'])) {
             $error_message = $_SESSION['error_message'];
             unset($_SESSION['error_message']);
@@ -68,6 +82,13 @@ class UserController {
     }
 
     public function editar() {
+        // Verificar permisos de administrador
+        if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
+            $_SESSION['error_message'] = "No tiene permisos para acceder a esta sección.";
+            header("Location: index.php?action=dashboard");
+            exit();
+        }
+        
         $this->model->id_usuario = isset($_GET['id']) ? $_GET['id'] : die('ERROR: ID no encontrado.');
         
         if(!$this->model->readOne()) {
@@ -121,6 +142,13 @@ class UserController {
     }
 
     public function eliminar() {
+        // Verificar permisos de administrador
+        if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
+            $_SESSION['error_message'] = "No tiene permisos para acceder a esta sección.";
+            header("Location: index.php?action=dashboard");
+            exit();
+        }
+        
         $this->model->id_usuario = isset($_GET['id']) ? $_GET['id'] : die('ERROR: ID no encontrado.');
         
         // No permitir eliminar el usuario actual

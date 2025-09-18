@@ -31,6 +31,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    if ($.fn.DataTable.isDataTable('#tablaUsuarios')) {
+        $('#tablaUsuarios').DataTable({
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json'
+            },
+            responsive: true,
+            order: [[0, 'asc']],
+            pageLength: 10,
+            lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todos"]]
+        });
+    }
+    
     // Inicializar popovers
     $('[data-bs-toggle="popover"]').popover();
     
@@ -100,7 +112,7 @@ function mostrarAlerta(mensaje, tipo) {
     alerta.innerHTML = `
         <i class="fas ${tipo === 'danger' ? 'fa-exclamation-triangle' : 'fa-check-circle'} me-2"></i>
         ${mensaje}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <button type="button" class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
     `;
     
     // Insertar al principio del main
