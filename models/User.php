@@ -19,7 +19,8 @@ class User {
 
     public function read() {
         $query = "SELECT id_usuario, username, nombre_completo, email, rol, activo, fecha_creacion, fecha_actualizacion
-                  FROM " . $this->table_name . " ORDER BY nombre_completo ASC";
+                  FROM " . $this->table_name . " 
+                  ORDER BY nombre_completo ASC";
         
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
@@ -54,7 +55,9 @@ class User {
     }
 
     public function readOne() {
-        $query = "SELECT * FROM " . $this->table_name . " WHERE id_usuario = ? LIMIT 0,1";
+        $query = "SELECT * FROM " . $this->table_name . " 
+                  WHERE id_usuario = ? LIMIT 0,1";
+        
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(1, $this->id_usuario);
         $stmt->execute();
@@ -115,7 +118,9 @@ class User {
     }
 
     public function delete() {
-        $query = "DELETE FROM " . $this->table_name . " WHERE id_usuario = ?";
+        $query = "DELETE FROM " . $this->table_name . " 
+                  WHERE id_usuario = ?";
+        
         $stmt = $this->conn->prepare($query);
         
         $this->id_usuario = htmlspecialchars(strip_tags($this->id_usuario));
