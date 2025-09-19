@@ -70,4 +70,43 @@
                                 </td>
                                 <td>
                                     <span class="badge bg-<?php echo $row['estado'] ? 'success' : 'secondary'; ?>">
-                                        <?php echo $row['estado'] ? 'Activo'
+                                        <?php echo $row['estado'] ? 'Activo' : 'Inactivo'; ?>
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group" role="group">
+                                        <a href="index.php?action=editar_token_api&id=<?php echo $row['id']; ?>" 
+                                           class="btn btn-sm btn-warning" data-bs-toggle="tooltip" title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="index.php?action=eliminar_token_api&id=<?php echo $row['id']; ?>" 
+                                           class="btn btn-sm btn-danger" 
+                                           onclick="return confirm('¿Está seguro de eliminar este token API?')"
+                                           data-bs-toggle="tooltip" title="Eliminar">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <?php endwhile; ?>
+                            <?php if ($contador == 1): ?>
+                            <tr>
+                                <td colspan="7" class="text-center py-5">
+                                    <i class="fas fa-key fa-3x text-muted mb-3"></i>
+                                    <h5 class="text-muted">No hay tokens API registrados</h5>
+                                    <p class="text-muted">Agregue nuevos tokens API para comenzar</p>
+                                    <a href="index.php?action=crear_token_api" class="btn btn-primary mt-2">
+                                        <i class="fas fa-plus me-1"></i> Crear Token API
+                                    </a>
+                                </td>
+                            </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php include_once 'views/layouts/footer.php'; ?>

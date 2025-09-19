@@ -90,6 +90,18 @@ $action = isset($_GET['action']) ? $_GET['action'] : 'dashboard';
                             <i class="fas fa-users me-1"></i> Usuarios
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo ($action == 'client_api' || $action == 'crear_client_api' || $action == 'editar_client_api') ? 'active' : ''; ?>" 
+                           href="index.php?action=client_api">
+                            <i class="fas fa-code me-1"></i> Clientes API
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo ($action == 'tokens_api' || $action == 'crear_token_api' || $action == 'editar_token_api') ? 'active' : ''; ?>" 
+                           href="index.php?action=tokens_api">
+                            <i class="fas fa-key me-1"></i> Tokens API
+                        </a>
+                    </li>
                     <?php endif; ?>
                     
                     <li class="nav-item dropdown">
@@ -107,6 +119,12 @@ $action = isset($_GET['action']) ? $_GET['action'] : 'dashboard';
                             <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin'): ?>
                             <li><a class="dropdown-item" href="index.php?action=crear_usuario">
                                 <i class="fas fa-user-plus me-2"></i> Nuevo Usuario
+                            </a></li>
+                            <li><a class="dropdown-item" href="index.php?action=crear_client_api">
+                                <i class="fas fa-code me-2"></i> Nuevo Cliente API
+                            </a></li>
+                            <li><a class="dropdown-item" href="index.php?action=crear_token_api">
+                                <i class="fas fa-key me-2"></i> Nuevo Token API
                             </a></li>
                             <?php endif; ?>
                         </ul>

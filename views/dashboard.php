@@ -22,6 +22,12 @@
                     <a href="index.php?action=usuarios" class="list-group-item list-group-item-action">
                         <i class="fas fa-users me-2"></i> Gestión de Usuarios
                     </a>
+                    <a href="index.php?action=client_api" class="list-group-item list-group-item-action">
+                        <i class="fas fa-code me-2"></i> Clientes API
+                    </a>
+                    <a href="index.php?action=tokens_api" class="list-group-item list-group-item-action">
+                        <i class="fas fa-key me-2"></i> Tokens API
+                    </a>
                     <?php endif; ?>
                     <a href="index.php?action=crear_mototaxi" class="list-group-item list-group-item-action">
                         <i class="fas fa-plus-circle me-2"></i> Nuevo Mototaxi
@@ -32,6 +38,12 @@
                     <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin'): ?>
                     <a href="index.php?action=crear_usuario" class="list-group-item list-group-item-action">
                         <i class="fas fa-user-plus me-2"></i> Nuevo Usuario
+                    </a>
+                    <a href="index.php?action=crear_client_api" class="list-group-item list-group-item-action">
+                        <i class="fas fa-code me-2"></i> Nuevo Cliente API
+                    </a>
+                    <a href="index.php?action=crear_token_api" class="list-group-item list-group-item-action">
+                        <i class="fas fa-key me-2"></i> Nuevo Token API
                     </a>
                     <?php endif; ?>
                 </div>
@@ -68,11 +80,15 @@
                 $mototaxi = new Mototaxi($db);
                 $empresa = new Empresa($db);
                 $user = new User($db);
+                $clientApi = new ClientApi($db);
+                $tokenApi = new TokenApi($db);
                 
                 // Usar los nuevos métodos para obtener los totales
                 $totalMototaxis = $mototaxi->countAll();
                 $totalEmpresas = $empresa->countAll();
                 $totalUsuarios = $user->countAll();
+                $totalClientesApi = $clientApi->countAll();
+                $totalTokensApi = $tokenApi->countAll();
                 $registrosHoyMototaxis = $mototaxi->countRegistrosHoy();
                 $registrosHoyEmpresas = $empresa->countRegistrosHoy();
                 $totalRegistrosHoy = $registrosHoyMototaxis + $registrosHoyEmpresas;
@@ -91,12 +107,20 @@
                     <span class="badge bg-info"><?php echo $totalUsuarios; ?></span>
                 </div>
                 <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span>Clientes API:</span>
+                    <span class="badge bg-warning"><?php echo $totalClientesApi; ?></span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span>Tokens API:</span>
+                    <span class="badge bg-danger"><?php echo $totalTokensApi; ?></span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
                     <span>Registros hoy:</span>
-                    <span class="badge bg-warning"><?php echo $totalRegistrosHoy; ?></span>
+                    <span class="badge bg-secondary"><?php echo $totalRegistrosHoy; ?></span>
                 </div>
                 <div class="d-flex justify-content-between align-items-center">
                     <span>Mototaxis activos:</span>
-                    <span class="badge bg-danger"><?php echo $mototaxisActivos; ?></span>
+                    <span class="badge bg-dark"><?php echo $mototaxisActivos; ?></span>
                 </div>
             </div>
         </div>
@@ -117,6 +141,12 @@
                 <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin'): ?>
                 <a href="index.php?action=crear_usuario" class="btn btn-info">
                     <i class="fas fa-plus me-1"></i> Nuevo Usuario
+                </a>
+                <a href="index.php?action=crear_client_api" class="btn btn-warning">
+                    <i class="fas fa-plus me-1"></i> Cliente API
+                </a>
+                <a href="index.php?action=crear_token_api" class="btn btn-danger">
+                    <i class="fas fa-plus me-1"></i> Token API
                 </a>
                 <?php endif; ?>
             </div>
@@ -154,7 +184,7 @@
 
         <!-- Tarjetas de resumen -->
         <div class="row mb-4">
-            <div class="col-xl-3 col-md-6 mb-4">
+            <div class="col-xl-2 col-md-4 mb-4">
                 <div class="card border-left-primary shadow h-100 py-2">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
@@ -171,7 +201,7 @@
                 </div>
             </div>
 
-            <div class="col-xl-3 col-md-6 mb-4">
+            <div class="col-xl-2 col-md-4 mb-4">
                 <div class="card border-left-success shadow h-100 py-2">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
@@ -188,7 +218,7 @@
                 </div>
             </div>
 
-            <div class="col-xl-3 col-md-6 mb-4">
+            <div class="col-xl-2 col-md-4 mb-4">
                 <div class="card border-left-info shadow h-100 py-2">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
@@ -205,12 +235,46 @@
                 </div>
             </div>
 
-            <div class="col-xl-3 col-md-6 mb-4">
+            <div class="col-xl-2 col-md-4 mb-4">
                 <div class="card border-left-warning shadow h-100 py-2">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                    Clientes API</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $totalClientesApi; ?></div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-code fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-2 col-md-4 mb-4">
+                <div class="card border-left-danger shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                    Tokens API</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $totalTokensApi; ?></div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-key fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-2 col-md-4 mb-4">
+                <div class="card border-left-secondary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">
                                     Registros Hoy</div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $totalRegistrosHoy; ?></div>
                             </div>
@@ -300,7 +364,7 @@
         </div>
 
         <!-- Últimas empresas registradas -->
-        <div class="card shadow">
+        <div class="card shadow mb-4">
             <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
                 <h6 class="mb-0"><i class="fas fa-building me-2"></i>Últimas Empresas Registradas</h6>
                 <a href="index.php?action=empresas" class="btn btn-sm btn-light">Ver Todas</a>
@@ -353,6 +417,73 @@
                 </div>
             </div>
         </div>
+
+        <!-- Últimos clientes API registrados (solo para admin) -->
+        <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin'): ?>
+        <div class="card shadow">
+            <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
+                <h6 class="mb-0"><i class="fas fa-code me-2"></i>Últimos Clientes API Registrados</h6>
+                <a href="index.php?action=client_api" class="btn btn-sm btn-light">Ver Todos</a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>RUC</th>
+                                <th>Razón Social</th>
+                                <th>Fecha Registro</th>
+                                <th>Estado</th>
+                                <th class="text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $clientesApi = $clientApi->read();
+                            $clientes_data = [];
+                            while ($row = $clientesApi->fetch(PDO::FETCH_ASSOC)) {
+                                $clientes_data[] = $row;
+                            }
+                            
+                            $count = 0;
+                            foreach ($clientes_data as $row) {
+                                if ($count >= 5) break;
+                                $count++;
+                            ?>
+                            <tr>
+                                <td><span class="badge bg-secondary"><?php echo $row['ruc']; ?></span></td>
+                                <td><?php echo $row['razon_social']; ?></td>
+                                <td>
+                                    <span class="badge bg-light text-dark">
+                                        <?php echo date('d/m/Y', strtotime($row['fecha_registro'])); ?>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-<?php echo $row['estado'] ? 'success' : 'secondary'; ?>">
+                                        <?php echo $row['estado'] ? 'Activo' : 'Inactivo'; ?>
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group">
+                                        <a href="index.php?action=editar_client_api&id=<?php echo $row['id']; ?>" 
+                                           class="btn btn-sm btn-warning">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <?php } ?>
+                            <?php if ($count == 0): ?>
+                            <tr>
+                                <td colspan="5" class="text-center">No hay clientes API registrados</td>
+                            </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
     </div>
 </div>
 
