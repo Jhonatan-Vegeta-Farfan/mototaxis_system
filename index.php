@@ -42,10 +42,17 @@ $userController = new UserController($db);
 $clientApiController = new ClientApiController($db);
 $tokenApiController = new TokenApiController($db);
 
-// Enrutamiento
+// Enrutamiento mejorado
 try {
     switch ($action) {
         case 'dashboard':
+            // Cargar modelos para estadísticas
+            $mototaxi = new Mototaxi($db);
+            $empresa = new Empresa($db);
+            $user = new User($db);
+            $clientApi = new ClientApi($db);
+            $tokenApi = new TokenApi($db);
+            
             // Mostrar el panel de control
             include_once 'views/dashboard.php';
             break;
@@ -55,7 +62,11 @@ try {
             break;
             
         case 'crear_empresa':
-            $empresaController->crear();
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                $empresaController->crear();
+            } else {
+                include_once 'views/empresas/crear.php';
+            }
             break;
             
         case 'editar_empresa':
@@ -63,7 +74,12 @@ try {
             if (!$id) {
                 throw new Exception("ID de empresa no proporcionado");
             }
-            $empresaController->editar($id);
+            
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                $empresaController->editar($id);
+            } else {
+                $empresaController->editar($id);
+            }
             break;
             
         case 'eliminar_empresa':
@@ -79,7 +95,20 @@ try {
             break;
             
         case 'crear_mototaxi':
-            $mototaxiController->crear();
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                $mototaxiController->crear();
+            } else {
+                // Obtener empresas para el formulario
+                $empresa = new Empresa($db);
+                $empresas = $empresa->read();
+                $empresas_data = $empresas->fetchAll(PDO::FETCH_ASSOC);
+                
+                // Obtener próximo número disponible
+                $mototaxi = new Mototaxi($db);
+                $next_number = $mototaxi->getNextAvailableNumber();
+                
+                include_once 'views/mototaxis/crear.php';
+            }
             break;
             
         case 'editar_mototaxi':
@@ -87,7 +116,12 @@ try {
             if (!$id) {
                 throw new Exception("ID de mototaxi no proporcionado");
             }
-            $mototaxiController->editar($id);
+            
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                $mototaxiController->editar($id);
+            } else {
+                $mototaxiController->editar($id);
+            }
             break;
             
         case 'eliminar_mototaxi':
@@ -119,7 +153,11 @@ try {
             break;
 
         case 'crear_usuario':
-            $userController->crear();
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                $userController->crear();
+            } else {
+                include_once 'views/usuarios/crear.php';
+            }
             break;
 
         case 'editar_usuario':
@@ -127,7 +165,18 @@ try {
             if (!$id) {
                 throw new Exception("ID de usuario no proporcionado");
             }
-            $userController->editar($id);
+            
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                $userController->editar($id);
+            } else {
+                // Cargar datos del usuario
+                $user = new User($db);
+                $user->id_usuario = $id;
+                if (!$user->readOne()) {
+                    throw new Exception("Usuario no encontrado");
+                }
+                include_once 'views/usuarios/editar.php';
+            }
             break;
 
         case 'eliminar_usuario':
@@ -143,7 +192,11 @@ try {
             break;
             
         case 'crear_client_api':
-            $clientApiController->crear();
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                $clientApiController->crear();
+            } else {
+                include_once 'views/client_api/crear.php';
+            }
             break;
             
         case 'editar_client_api':
@@ -151,7 +204,18 @@ try {
             if (!$id) {
                 throw new Exception("ID de cliente API no proporcionado");
             }
-            $clientApiController->editar($id);
+            
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                $clientApiController->editar($id);
+            } else {
+                // Cargar datos del cliente API
+                $client = new ClientApi($db);
+                $client->id = $id;
+                if (!$client->readOne()) {
+                    throw new Exception("Cliente API no encontrado");
+                }
+                include_once 'views/client_api/editar.php';
+            }
             break;
             
         case 'eliminar_client_api':
@@ -167,7 +231,14 @@ try {
             break;
             
         case 'crear_token_api':
-            $tokenApiController->crear();
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                $tokenApiController->crear();
+            } else {
+                // Obtener lista de clientes para el formulario
+                $clientApi = new ClientApi($db);
+                $clients = $clientApi->read();
+                include_once 'views/tokens_api/crear.php';
+            }
             break;
             
         case 'editar_token_api':
@@ -175,7 +246,23 @@ try {
             if (!$id) {
                 throw new Exception("ID de token API no proporcionado");
             }
-            $tokenApiController->editar($id);
+            
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                $tokenApiController->editar($id);
+            } else {
+                // Cargar datos del token API
+                $token = new TokenApi($db);
+                $token->id = $id;
+                if (!$token->readOne()) {
+                    throw new Exception("Token API no encontrado");
+                }
+                
+                // Obtener lista de clientes para el formulario
+                $clientApi = new ClientApi($db);
+                $clients = $clientApi->read();
+                
+                include_once 'views/tokens_api/editar.php';
+            }
             break;
             
         case 'eliminar_token_api':
@@ -194,6 +281,13 @@ try {
             break;
             
         default:
+            // Cargar modelos para estadísticas
+            $mototaxi = new Mototaxi($db);
+            $empresa = new Empresa($db);
+            $user = new User($db);
+            $clientApi = new ClientApi($db);
+            $tokenApi = new TokenApi($db);
+            
             include_once 'views/dashboard.php';
             break;
     }

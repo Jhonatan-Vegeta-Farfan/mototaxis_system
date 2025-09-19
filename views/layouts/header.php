@@ -6,6 +6,9 @@ if (session_status() == PHP_SESSION_NONE) {
 
 // Obtener la acción actual
 $action = isset($_GET['action']) ? $_GET['action'] : 'dashboard';
+
+// Verificar si el usuario es administrador
+$isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin';
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -29,11 +32,17 @@ $action = isset($_GET['action']) ? $_GET['action'] : 'dashboard';
     <!-- Custom CSS -->
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
-        /* Solo agregamos este pequeño ajuste para el logo */
         .navbar-brand img {
             height: 80px;
             width: auto;
             object-fit: contain;
+        }
+        
+        /* Estilo para elementos de menú activos */
+        .nav-item .active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            color: white !important;
         }
     </style>
 </head>
@@ -71,33 +80,33 @@ $action = isset($_GET['action']) ? $_GET['action'] : 'dashboard';
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?php echo ($action == 'mototaxis' || $action == 'crear_mototaxi' || $action == 'editar_mototaxi' || $action == 'porConductor') ? 'active' : ''; ?>" 
+                        <a class="nav-link <?php echo (in_array($action, ['mototaxis', 'crear_mototaxi', 'editar_mototaxi', 'porConductor'])) ? 'active' : ''; ?>" 
                            href="index.php?action=mototaxis">
                             <i class="fas fa-motorcycle me-1"></i> Mototaxis
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?php echo ($action == 'empresas' || $action == 'crear_empresa' || $action == 'editar_empresa') ? 'active' : ''; ?>" 
+                        <a class="nav-link <?php echo (in_array($action, ['empresas', 'crear_empresa', 'editar_empresa'])) ? 'active' : ''; ?>" 
                            href="index.php?action=empresas">
                             <i class="fas fa-building me-1"></i> Empresas
                         </a>
                     </li>
                     
-                    <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin'): ?>
+                    <?php if ($isAdmin): ?>
                     <li class="nav-item">
-                        <a class="nav-link <?php echo ($action == 'usuarios' || $action == 'crear_usuario' || $action == 'editar_usuario') ? 'active' : ''; ?>" 
+                        <a class="nav-link <?php echo (in_array($action, ['usuarios', 'crear_usuario', 'editar_usuario'])) ? 'active' : ''; ?>" 
                            href="index.php?action=usuarios">
                             <i class="fas fa-users me-1"></i> Usuarios
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?php echo ($action == 'client_api' || $action == 'crear_client_api' || $action == 'editar_client_api') ? 'active' : ''; ?>" 
+                        <a class="nav-link <?php echo (in_array($action, ['client_api', 'crear_client_api', 'editar_client_api'])) ? 'active' : ''; ?>" 
                            href="index.php?action=client_api">
                             <i class="fas fa-code me-1"></i> Clientes API
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?php echo ($action == 'tokens_api' || $action == 'crear_token_api' || $action == 'editar_token_api') ? 'active' : ''; ?>" 
+                        <a class="nav-link <?php echo (in_array($action, ['tokens_api', 'crear_token_api', 'editar_token_api'])) ? 'active' : ''; ?>" 
                            href="index.php?action=tokens_api">
                             <i class="fas fa-key me-1"></i> Tokens API
                         </a>
@@ -116,7 +125,7 @@ $action = isset($_GET['action']) ? $_GET['action'] : 'dashboard';
                             <li><a class="dropdown-item" href="index.php?action=crear_empresa">
                                 <i class="fas fa-building me-2"></i> Nueva Empresa
                             </a></li>
-                            <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin'): ?>
+                            <?php if ($isAdmin): ?>
                             <li><a class="dropdown-item" href="index.php?action=crear_usuario">
                                 <i class="fas fa-user-plus me-2"></i> Nuevo Usuario
                             </a></li>
@@ -132,7 +141,7 @@ $action = isset($_GET['action']) ? $_GET['action'] : 'dashboard';
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" 
                            data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-user me-1"></i> <?php echo $_SESSION['user_name'] ?? 'Usuario'; ?>
+                            <i class="fas fa-user me-1"></i> <?php echo $_SESSION['username'] ?? 'Usuario'; ?>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="userDropdown">
                             <li><a class="dropdown-item" href="#">
